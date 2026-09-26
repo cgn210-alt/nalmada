@@ -33,26 +33,32 @@
   .gear:active{transform:scale(.93);}
 
   /* 헤더 */
-  .head{padding:6px 2px 22px;text-align:center;}
+  .head{padding:8px 4px 16px;}
   .head .kicker{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.2px;}
   .head .kicker #v-date{color:var(--ink-2);}
-  .head .title{font-size:25px;font-weight:900;letter-spacing:-.4px;margin-top:7px;}
+  .head .title{font-size:23px;font-weight:900;letter-spacing:-.4px;margin-top:7px;}
+  .head .desc{font-size:13px;color:var(--ink-2);margin-top:6px;}
 
-  /* 원형 리스트 */
-  .list{display:flex;flex-direction:column;gap:6px;}
-  .row{display:flex;align-items:center;gap:16px;padding:12px 10px;border-radius:18px;text-decoration:none;color:inherit;transition:.12s;}
-  .row:active{background:var(--soft);} .row.off{opacity:.5;}
-  .circle{width:64px;height:64px;border-radius:50%;flex:0 0 auto;position:relative;overflow:hidden;display:grid;place-items:center;color:#fff;background:var(--soft-2);}
-  .circle img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-  .circle .em{font-size:27px;line-height:1;}
-  .row .body{flex:1;min-width:0;}
-  .row .l1{font-size:15.5px;font-weight:800;color:var(--ink);line-height:1.3;word-break:keep-all;}
-  .row .l2{font-size:13px;color:var(--ink-2);margin-top:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
-  .sep{height:1px;background:var(--line);margin:0 10px;}
+  /* 리치 카드 리스트 */
+  .list{display:flex;flex-direction:column;gap:2px;}
+  .card{display:flex;gap:14px;align-items:center;padding:12px 8px;border-radius:18px;text-decoration:none;color:inherit;transition:.12s;}
+  .card:active{background:var(--soft);} .card.off{opacity:.55;}
+  .card .thumb{width:104px;height:104px;border-radius:16px;flex:0 0 auto;position:relative;overflow:hidden;background:var(--soft-2);display:grid;place-items:center;color:#fff;}
+  .card .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .card .thumb .em{font-size:34px;line-height:1;}
+  .card .thumb .tag{position:absolute;left:7px;bottom:7px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:800;padding:5px 9px;border-radius:8px;max-width:calc(100% - 14px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .card .body{flex:1;min-width:0;}
+  .card .title{font-size:17px;font-weight:800;line-height:1.3;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all;}
+  .card .m1{font-size:13px;color:var(--ink-2);margin-top:6px;line-height:1.35;}
+  .card .m2{display:flex;align-items:center;gap:7px;margin-top:8px;}
+  .card .src{font-weight:800;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:7px;font-size:11.5px;}
+  .card .go{font-size:12.5px;font-weight:700;color:var(--ink-2);}
+  .sep{height:1px;background:var(--line);margin:0 8px;}
 
-  /* 후원 */
-  .donate-row{margin-top:10px;padding-top:16px;border-top:1px solid var(--line);}
-  .donate-row .pill{width:64px;height:64px;border-radius:20px;flex:0 0 auto;background:linear-gradient(135deg,#ff9d3c,#f37321);display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;text-align:center;letter-spacing:-.3px;box-shadow:0 6px 16px rgba(243,115,33,.28);}
+  /* 후원 카드 */
+  .donate-card{margin-top:12px;padding-top:16px;border-top:1px solid var(--line);}
+  .donate-card .thumb{background:linear-gradient(135deg,#ff9d3c,#f37321);}
+  .donate-card .src{color:#f37321;background:#fff3ea;}
 
   .more{display:block;text-align:center;margin-top:16px;background:var(--soft);color:var(--ink-2);font-weight:700;font-size:13.5px;padding:14px;border-radius:14px;text-decoration:none;}
   .more:active{transform:translateY(1px);}
@@ -125,6 +131,7 @@
     <div class="head">
       <div class="kicker">날마다 · 퐁당 &nbsp;<span id="v-date">—</span></div>
       <div class="title">오늘의 추천 콘텐츠</div>
+      <div class="desc">매일 골라 담은 오늘의 말씀과 영상</div>
     </div>
 
     <div class="list" id="feed"></div>
@@ -241,30 +248,39 @@
   }
 
   /* ---------- 유저 화면 ---------- */
-  function contentRow(it,i){
+  function contentCard(it,i){
     var on=isUrl(it.link),thumb=autoThumb(it),grad=GRADS[i%GRADS.length];
-    var l1=esc(it.label+(it.sub?" • "+it.sub:""));
-    var l2=esc(it.title||"");
+    var big=esc(it.title||it.label||"콘텐츠");
+    var m1=it.title?(it.label+(it.sub?" • "+it.sub:"")):(it.sub||"");
+    var src=source(it.link);
     var img=thumb?'<img src="'+esc(thumb)+'" alt="" onerror="this.remove()" />':'';
-    var circle='<div class="circle" style="background:'+grad+'"><span class="em">'+esc(it.emoji||"🎬")+'</span>'+img+'</div>';
+    var tag='<span class="tag">'+esc((it.emoji?it.emoji+" ":"")+it.label)+'</span>';
     var href=on?esc(it.link):"#",tgt=on?' target="_blank" rel="noopener"':' onclick="return false"';
-    return '<a class="row'+(on?'':' off')+'" href="'+href+'"'+tgt+'>'+circle+
-      '<div class="body"><div class="l1">'+l1+'</div>'+(l2?'<div class="l2">'+l2+'</div>':'')+'</div></a>';
+    return '<a class="card'+(on?'':' off')+'" href="'+href+'"'+tgt+'>'+
+      '<div class="thumb" style="background:'+grad+'"><span class="em">'+esc(it.emoji||"🎬")+'</span>'+img+tag+'</div>'+
+      '<div class="body"><div class="title">'+big+'</div>'+
+        (m1?'<div class="m1">'+esc(m1)+'</div>':'')+
+        '<div class="m2">'+(src?'<span class="src">'+esc(src)+'</span>':'')+'<span class="go">'+(on?'지금 시청 ›':'준비 중')+'</span></div>'+
+      '</div></a>';
   }
-  function donateRow(){
+  function donateCard(){
     var on=isUrl(state.donate),href=on?esc(state.donate):"#",tgt=on?' target="_blank" rel="noopener"':' onclick="return false"';
-    return '<a class="row donate-row" href="'+href+'"'+tgt+'><div class="pill">후원하기</div>'+
-      '<div class="body"><div class="l1">함께! 미디어 선교</div><div class="l2">여러분의 후원이 복음의 통로가 됩니다</div></div></a>';
+    return '<a class="card donate-card" href="'+href+'"'+tgt+'>'+
+      '<div class="thumb"><span class="em">💛</span></div>'+
+      '<div class="body"><div class="title">함께! 미디어 선교</div>'+
+        '<div class="m1">여러분의 후원이 복음의 통로가 됩니다</div>'+
+        '<div class="m2"><span class="src">후원</span><span class="go">후원하기 ›</span></div>'+
+      '</div></a>';
   }
   function renderFeed(items){
     var feed=$("feed");feed.innerHTML="";
     if(items&&items.length){
       items.forEach(function(it,i){
         if(i>0)feed.insertAdjacentHTML("beforeend",'<div class="sep"></div>');
-        feed.insertAdjacentHTML("beforeend",contentRow(it,i));
+        feed.insertAdjacentHTML("beforeend",contentCard(it,i));
       });
     }else{feed.insertAdjacentHTML("beforeend",'<div class="empty">오늘의 콘텐츠가 아직 준비되지 않았습니다.</div>');}
-    feed.insertAdjacentHTML("beforeend",donateRow());
+    feed.insertAdjacentHTML("beforeend",donateCard());
     if(isUrl(state.moreLink))feed.insertAdjacentHTML("beforeend",'<a class="more" href="'+esc(state.moreLink)+'" target="_blank" rel="noopener">퐁당에서 더 보기 ›</a>');
   }
   function renderPublic(){
