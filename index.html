@@ -89,6 +89,10 @@
   .divider-h{height:1px;background:var(--line);margin:15px 0;}
   .sec{font-size:12px;font-weight:800;color:var(--ink);margin:0 0 10px;}
 
+  .weeknav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .weeknav .wnav{width:32px;height:32px;border-radius:9px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:18px;font-weight:800;cursor:pointer;display:grid;place-items:center;font-family:inherit;}
+  .weeknav .wnav:active{transform:scale(.93);}
+  .weeknav .week-label{font-size:13.5px;font-weight:800;color:var(--ink);}
   .weekstrip{display:flex;gap:7px;overflow-x:auto;padding:2px 0 6px;margin-bottom:8px;}
   .wchip{flex:0 0 auto;width:46px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 0 7px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-family:inherit;}
   .wchip.sel{border-color:var(--accent);background:var(--accent-soft);}
@@ -170,8 +174,13 @@
 
       <div class="pane active" id="pane-edit">
         <p class="sec">편집할 날짜</p>
+        <div class="weeknav">
+          <button type="button" class="wnav" id="weekPrev">‹</button>
+          <span class="week-label" id="weekLabel">—</span>
+          <button type="button" class="wnav" id="weekNext">›</button>
+        </div>
         <div class="weekstrip" id="weekstrip"></div>
-        <div class="field"><input type="date" id="f-editdate" /><div class="hint">위 요일 칩을 누르거나 날짜를 직접 골라 편집합니다. 파란 점 = 링크 작성 완료.</div></div>
+        <div class="field"><input type="date" id="f-editdate" /><div class="hint">‹ › 로 주를 이동해 다음 주까지 미리 준비할 수 있습니다. 날짜 칩이나 달력에서 아무 날짜나 골라 편집하세요. 파란 점 = 링크 작성 완료.</div></div>
 
         <div class="divider-h"></div>
         <p class="sec">이 날짜의 콘텐츠</p>
@@ -267,6 +276,7 @@
 
   var state=load();
   var selectedDate=isoToday();
+  var weekBase=null;
 
   function resolveDay(dateISO){
     var d=state.days||{};
@@ -361,20 +371,21 @@
   }
   function syncEditor(){ state.days[selectedDate]={items:readItems()}; state.donate=$("f-donate").value.trim(); state.moreLink=$("f-more").value.trim(); }
 
-  function weekMonday(){
-    var t=isoToday(),p=t.split("-"),dow=new Date(+p[0],+p[1]-1,+p[2]).getDay();
-    return addDays(t,(dow===0)?-6:(1-dow));
-  }
+  function mondayOf(iso){var p=iso.split("-"),dow=new Date(+p[0],+p[1]-1,+p[2]).getDay();return addDays(iso,(dow===0)?-6:(1-dow));}
+  function weekMonday(){return mondayOf(isoToday());}
+  function labelRange(a,b){var pa=a.split("-"),pb=b.split("-");return (+pa[1])+"월 "+(+pa[2])+"일 ~ "+(+pb[1])+"월 "+(+pb[2])+"일";}
   function renderWeekStrip(){
-    var base=weekMonday(),today=isoToday(),html="";
+    if(!weekBase)weekBase=weekMonday();
+    var today=isoToday(),html="";
     for(var k=0;k<7;k++){
-      var iso=addDays(base,k),f=fmtDate(iso),on=hasContent(state.days[iso]),sel=(iso===selectedDate),td=(iso===today);
+      var iso=addDays(weekBase,k),f=fmtDate(iso),on=hasContent(state.days[iso]),sel=(iso===selectedDate),td=(iso===today);
       html+='<button type="button" class="wchip'+(sel?' sel':'')+(td?' today':'')+'" data-d="'+iso+'"><span class="wd">'+f.wdShort+'</span><span class="dd">'+f.dd+'</span><span class="dot'+(on?' on':'')+'"></span></button>';
     }
     $("weekstrip").innerHTML=html;
+    $("weekLabel").textContent=labelRange(weekBase,addDays(weekBase,6));
   }
-  function loadDate(iso){selectedDate=iso;$("f-editdate").value=iso;renderItemsEditor();renderWeekStrip();}
-  function fillForm(){$("f-donate").value=state.donate;$("f-more").value=state.moreLink||"";selectedDate=isoToday();$("f-editdate").value=selectedDate;renderItemsEditor();renderWeekStrip();}
+  function loadDate(iso){selectedDate=iso;weekBase=mondayOf(iso);$("f-editdate").value=iso;renderItemsEditor();renderWeekStrip();}
+  function fillForm(){$("f-donate").value=state.donate;$("f-more").value=state.moreLink||"";selectedDate=isoToday();weekBase=mondayOf(selectedDate);$("f-editdate").value=selectedDate;renderItemsEditor();renderWeekStrip();}
 
   var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},1800);}
 
@@ -413,6 +424,8 @@
 
   $("f-editdate").addEventListener("change",function(){syncEditor();save();loadDate(this.value||isoToday());});
   $("weekstrip").addEventListener("click",function(e){var b=e.target.closest(".wchip");if(!b)return;syncEditor();save();loadDate(b.getAttribute("data-d"));});
+  $("weekPrev").addEventListener("click",function(){syncEditor();save();weekBase=addDays(weekBase,-7);renderWeekStrip();});
+  $("weekNext").addEventListener("click",function(){syncEditor();save();weekBase=addDays(weekBase,7);renderWeekStrip();});
 
   $("addItem").addEventListener("click",function(){var items=readItems();items.push({emoji:"✨",label:"새 콘텐츠",sub:"",title:"",desc:"",link:"",thumb:""});state.days[selectedDate]={items:items};renderItemsEditor();});
   $("itemsWrap").addEventListener("click",function(e){
