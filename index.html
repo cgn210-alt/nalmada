@@ -110,6 +110,7 @@
   .item .ib:active{transform:scale(.92);} .item .ib.del{color:#f05252;}
   .item .g{display:flex;gap:8px;} .item .g .em{width:58px;flex:0 0 auto;text-align:center;}
   .item input,.item textarea{background:#fff;}
+  .item input[readonly]{background:#eef0f3;color:var(--ink-2);cursor:default;}
   .add{width:100%;border:1.5px dashed #cfd2da;background:#fff;color:var(--accent);font-weight:800;font-size:14px;border-radius:14px;padding:13px;cursor:pointer;font-family:inherit;}
   .add:active{transform:translateY(1px);}
 
@@ -236,7 +237,7 @@
 <script>
 (function(){
   "use strict";
-  var KEY="cgn_pongdang_daily_v7";
+  var KEY="cgn_pongdang_daily_v8";
   var WD=["일","월","화","수","목","금","토"];
   var GRADS=["linear-gradient(135deg,#12c8ae,#2f7bf6)","linear-gradient(135deg,#7c5cf0,#2f7bf6)","linear-gradient(135deg,#ff9f43,#ff6b6b)","linear-gradient(135deg,#22d3a5,#7c5cf0)"];
 
@@ -251,14 +252,14 @@
       "2026-09-26":{items:[
         {emoji:"📖",label:"일-일 통독",sub:"CGN과 함께",title:"",desc:"",link:"https://fnd.my/Ntd",thumb:"icon-bible.png"},
         {emoji:"🙏",label:"생명의 삶",sub:"영적 회복",title:"",desc:"",link:"https://youtu.be/7xa636ZrKEs?si=WewLV63AwhdN1hNZ",thumb:"icon-life.png"},
-        {emoji:"🎬",label:"퐁당",sub:"복음에 빠지다",title:"갓툰_39편_요셉 두번째 이야기",desc:"",link:"https://fnd.my/4wp",thumb:"icon-fondant.png"}
+        {emoji:"🎬",label:"퐁당영화",sub:"복음에 빠지다",title:"갓툰_39편_요셉 두번째 이야기",desc:"",link:"https://fnd.my/4wp",thumb:"icon-fondant.png"}
       ]}
     }
   };
   function templateItems(){return [
     {emoji:"📖",label:"일-일 통독",sub:"CGN과 함께",title:"",desc:"",link:"",thumb:"icon-bible.png"},
     {emoji:"🙏",label:"생명의 삶",sub:"영적 회복",title:"",desc:"",link:"",thumb:"icon-life.png"},
-    {emoji:"🎬",label:"퐁당",sub:"복음에 빠지다",title:"",desc:"",link:"",thumb:"icon-fondant.png"}
+    {emoji:"🎬",label:"퐁당영화",sub:"복음에 빠지다",title:"",desc:"",link:"",thumb:"icon-fondant.png"}
   ];}
 
   function $(id){return document.getElementById(id);}
@@ -353,11 +354,11 @@
         '<button type="button" class="ib" data-act="up"'+(i===0?' disabled style="opacity:.3"':'')+'>↑</button>'+
         '<button type="button" class="ib" data-act="down"'+(i===total-1?' disabled style="opacity:.3"':'')+'>↓</button>'+
         '<button type="button" class="ib del" data-act="del">✕</button></div>'+
-      '<div class="field"><input data-f="title" value="'+esc(it.title)+'" placeholder="콘텐츠 제목 (예: 갓툰 39편 요셉 이야기)" /></div>'+
-      '<div class="field"><input data-f="link" value="'+esc(it.link)+'" placeholder="콘텐츠 링크 (https://...)" /></div>'+
       '<div class="field"><div class="g">'+
-        '<input class="em" data-f="emoji" value="'+esc(it.emoji)+'" placeholder="📖" />'+
-        '<input data-f="label" value="'+esc(it.label)+'" placeholder="코너 이름 (예: 퐁당)" /></div></div>'+
+        '<input class="em" data-f="emoji" value="'+esc(it.emoji)+'"'+(it.label?' readonly':'')+' placeholder="📖" />'+
+        '<input data-f="label" value="'+esc(it.label)+'"'+(it.label?' readonly':'')+' placeholder="코너 이름 (예: 퐁당영화)" /></div></div>'+
+      '<div class="field"><input data-f="link" value="'+esc(it.link)+'" placeholder="콘텐츠 링크 (https://...)" /></div>'+
+      '<div class="field"><input data-f="title" value="'+esc(it.title)+'" placeholder="(선택) 오늘 콘텐츠 제목" /></div>'+
       '<div class="field"><input data-f="sub" value="'+esc(it.sub)+'" placeholder="부제 (예: 복음에 빠지다)" /></div>'+
       '<div class="field"><input data-f="thumb" value="'+esc(it.thumb)+'" placeholder="원형 이미지 파일명/주소 (예: icon-bible.png)" /></div>'+
       '<input type="hidden" data-f="desc" value="'+esc(it.desc)+'" />'+
