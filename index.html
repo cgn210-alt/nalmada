@@ -10,13 +10,13 @@
 <meta property="og:description" content="오늘의 추천 콘텐츠와 말씀을 만나보세요 · CGN 미디어 선교" />
 <meta property="og:site_name" content="CGN 퐁당" />
 <meta property="og:locale" content="ko_KR" />
-<meta name="theme-color" content="#2f7bf6" />
+<meta name="theme-color" content="#ffffff" />
 <meta property="og:url" content="https://cgn210-alt.github.io/nalmada/" />
-<meta property="og:image" content="https://cgn210-alt.github.io/nalmada/fondant-logo.png" />
+<meta property="og:image" content="https://cgn210-alt.github.io/nalmada/icon-fondant.png" />
 <style>
   :root{
-    --bg:#ffffff; --soft:#f4f5f7; --soft-2:#eef0f3;
-    --ink:#17181c; --ink-2:#8b909a; --line:#eceef1;
+    --bg:#ffffff; --soft:#f5f6f8; --soft-2:#eef0f3;
+    --ink:#18191f; --ink-2:#8a8f99; --line:#eef0f3;
     --accent:#4b5bf5; --accent-soft:#eef0ff;
     --grad:linear-gradient(120deg,#12c8ae,#2f7bf6 55%,#7c5cf0);
     font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;
@@ -25,39 +25,40 @@
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
   body{background:var(--bg);color:var(--ink);min-height:100dvh;}
-  .app{max-width:440px;margin:0 auto;padding:0 20px 40px;}
+  .app{max-width:430px;margin:0 auto;padding:0 22px 44px;}
 
-  .top{display:flex;align-items:center;justify-content:space-between;padding:18px 0 6px;}
-  .brand{display:flex;align-items:center;gap:8px;}
-  .brand img{height:22px;width:auto;display:block;}
-  .logo-file{height:30px !important;width:auto;display:block;border-radius:8px;}
-  .fd{font-weight:800;font-size:19px;letter-spacing:-.6px;display:inline-flex;align-items:center;line-height:1;color:#fff;background:#000;padding:7px 12px;border-radius:9px;}
-  .fd .o{width:.64em;height:.64em;border-radius:50%;margin:0 .04em;display:inline-block;background:conic-gradient(from 200deg,#22d3a5,#3b82f6,#8b5cf6,#22d3a5);}
-  .brand .tag{color:var(--ink-2);font-weight:700;font-size:13px;}
-  .gear{background:var(--soft);border:none;color:var(--ink);width:38px;height:38px;border-radius:12px;font-size:17px;cursor:pointer;display:grid;place-items:center;transition:.12s;}
+  /* 상단: 관리자 버튼만 */
+  .top{display:flex;justify-content:flex-end;padding:16px 0 4px;}
+  .gear{background:var(--soft);border:none;color:var(--ink-2);width:38px;height:38px;border-radius:12px;font-size:17px;cursor:pointer;display:grid;place-items:center;transition:.12s;}
   .gear:active{transform:scale(.93);}
 
-  .head{padding:14px 2px 16px;}
+  /* 헤더 */
+  .head{padding:6px 2px 22px;text-align:center;}
   .head .kicker{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.2px;}
-  .head .title{font-size:26px;font-weight:900;letter-spacing:-.3px;margin-top:5px;}
+  .head .kicker #v-date{color:var(--ink-2);}
+  .head .title{font-size:25px;font-weight:900;letter-spacing:-.4px;margin-top:7px;}
 
-  /* 원형 리스트 (카톡 카드 형태) */
-  .list{display:flex;flex-direction:column;gap:2px;}
-  .row{display:flex;align-items:center;gap:14px;padding:11px 8px;border-radius:16px;text-decoration:none;color:inherit;transition:.12s;}
+  /* 원형 리스트 */
+  .list{display:flex;flex-direction:column;gap:6px;}
+  .row{display:flex;align-items:center;gap:16px;padding:12px 10px;border-radius:18px;text-decoration:none;color:inherit;transition:.12s;}
   .row:active{background:var(--soft);} .row.off{opacity:.5;}
-  .circle{width:60px;height:60px;border-radius:50%;flex:0 0 auto;position:relative;overflow:hidden;display:grid;place-items:center;color:#fff;box-shadow:0 3px 10px rgba(25,24,51,.13);}
+  .circle{width:64px;height:64px;border-radius:50%;flex:0 0 auto;position:relative;overflow:hidden;display:grid;place-items:center;color:#fff;background:var(--soft-2);}
   .circle img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-  .circle .em{font-size:26px;line-height:1;}
+  .circle .em{font-size:27px;line-height:1;}
   .row .body{flex:1;min-width:0;}
-  .row .l1{font-size:15px;font-weight:800;color:var(--ink);line-height:1.3;word-break:keep-all;}
-  .row .l2{font-size:13px;color:var(--ink-2);margin-top:4px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
-  .donate-row{margin-top:6px;}
-  .donate-row .pill{width:60px;height:60px;border-radius:16px;flex:0 0 auto;background:linear-gradient(135deg,#ff9d3c,#f37321);display:grid;place-items:center;color:#fff;font-weight:800;font-size:12.5px;text-align:center;box-shadow:0 4px 12px rgba(243,115,33,.32);letter-spacing:-.3px;}
-  .more{display:block;text-align:center;margin-top:12px;background:var(--soft);color:var(--ink-2);font-weight:700;font-size:13.5px;padding:13px;border-radius:14px;text-decoration:none;}
+  .row .l1{font-size:15.5px;font-weight:800;color:var(--ink);line-height:1.3;word-break:keep-all;}
+  .row .l2{font-size:13px;color:var(--ink-2);margin-top:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+  .sep{height:1px;background:var(--line);margin:0 10px;}
+
+  /* 후원 */
+  .donate-row{margin-top:10px;padding-top:16px;border-top:1px solid var(--line);}
+  .donate-row .pill{width:64px;height:64px;border-radius:20px;flex:0 0 auto;background:linear-gradient(135deg,#ff9d3c,#f37321);display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;text-align:center;letter-spacing:-.3px;box-shadow:0 6px 16px rgba(243,115,33,.28);}
+
+  .more{display:block;text-align:center;margin-top:16px;background:var(--soft);color:var(--ink-2);font-weight:700;font-size:13.5px;padding:14px;border-radius:14px;text-decoration:none;}
   .more:active{transform:translateY(1px);}
   .empty{background:var(--soft);border-radius:16px;padding:30px 18px;text-align:center;color:var(--ink-2);font-size:14px;}
 
-  .footer{text-align:center;color:var(--ink-2);font-size:11px;line-height:1.8;margin-top:26px;letter-spacing:.5px;}
+  .footer{text-align:center;color:var(--ink-2);font-size:11px;line-height:1.8;margin-top:30px;letter-spacing:.5px;}
   .footer b{color:var(--ink);letter-spacing:2px;}
 
   /* ===== 관리자 ===== */
@@ -100,13 +101,6 @@
   .add{width:100%;border:1.5px dashed #cfd2da;background:#fff;color:var(--accent);font-weight:800;font-size:14px;border-radius:14px;padding:13px;cursor:pointer;font-family:inherit;}
   .add:active{transform:translateY(1px);}
 
-  .logo-up{display:flex;align-items:center;gap:13px;background:var(--soft);border-radius:14px;padding:13px;}
-  .logo-prev{width:90px;height:40px;border-radius:9px;background:#fff;display:grid;place-items:center;overflow:hidden;flex:0 0 auto;border:1px solid var(--line);}
-  .logo-prev img{max-width:100%;max-height:100%;} .logo-prev .ph{font-weight:800;font-size:15px;color:var(--accent);}
-  .logo-act{flex:1;display:flex;flex-direction:column;gap:7px;}
-  .file-label{text-align:center;background:var(--ink);color:#fff;font-weight:800;font-size:13px;padding:10px;border-radius:10px;cursor:pointer;}
-  .link-btn{background:none;border:none;color:var(--ink-2);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:inherit;}
-
   .btnrow{display:flex;gap:10px;margin-top:8px;}
   .btn{flex:1;border:none;border-radius:13px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:.12s;}
   .btn-primary{background:var(--ink);color:#fff;} .btn-ghost{background:var(--soft);color:var(--ink);} .btn:active{transform:translateY(1px);}
@@ -125,15 +119,11 @@
 <body>
   <div class="app">
     <div class="top">
-      <div class="brand" id="brand">
-        <span id="brandLogo"><span class="fd">f<span class="o"></span>ndant</span></span>
-        <span class="tag" id="brandTag">퐁당</span>
-      </div>
       <button class="gear" id="openAdmin" title="관리자">⚙︎</button>
     </div>
 
     <div class="head">
-      <div class="kicker" id="v-date">—</div>
+      <div class="kicker">날마다 · 퐁당 &nbsp;<span id="v-date">—</span></div>
       <div class="title">오늘의 추천 콘텐츠</div>
     </div>
 
@@ -155,7 +145,6 @@
         <div class="tab" data-tab="deploy">배포</div>
       </div>
 
-      <!-- 편집 -->
       <div class="pane active" id="pane-edit">
         <p class="sec">편집할 날짜</p>
         <div class="weekstrip" id="weekstrip"></div>
@@ -170,15 +159,6 @@
         <p class="sec">공통 설정 (모든 날짜에 적용)</p>
         <div class="field"><label>후원 링크</label><input type="url" id="f-donate" placeholder="https://online.mrm.or.kr/..." /></div>
         <div class="field"><label>더보기 버튼 링크</label><input type="url" id="f-more" placeholder="https://www.fondant.kr/" /><div class="hint">맨 아래 '퐁당에서 더 보기' 버튼 주소. 비우면 버튼이 숨겨집니다.</div></div>
-        <div class="field"><label>로고 (선택)</label>
-          <div class="logo-up">
-            <div class="logo-prev" id="logoPreview"><span class="ph">fondant</span></div>
-            <div class="logo-act">
-              <label class="file-label">이미지 업로드<input type="file" id="f-logo" accept="image/*" style="display:none" /></label>
-              <button type="button" class="link-btn" id="logoReset">기본으로 되돌리기</button>
-            </div>
-          </div>
-        </div>
 
         <div class="btnrow">
           <button class="btn btn-ghost" id="closeBtn">닫기</button>
@@ -186,7 +166,6 @@
         </div>
       </div>
 
-      <!-- 보내기 -->
       <div class="pane" id="pane-send">
         <p class="sub" style="margin-bottom:12px">선택한 날짜(<span id="sendDate">—</span>)의 배포 메시지입니다.</p>
         <div class="preview" id="msgOut"></div>
@@ -194,7 +173,6 @@
         <button class="copy2" id="copyBtn">📋 메시지 복사</button>
       </div>
 
-      <!-- 배포 -->
       <div class="pane" id="pane-deploy">
         <p class="sub">일주일치를 다 채웠으면 아래 파일을 내려받아 GitHub에 올리면, 유저들이 매일 자동으로 그날 콘텐츠를 봅니다.</p>
         <div class="deploy-box">
@@ -210,7 +188,7 @@
 <script>
 (function(){
   "use strict";
-  var KEY="cgn_pongdang_daily_v6";
+  var KEY="cgn_pongdang_daily_v7";
   var WD=["일","월","화","수","목","금","토"];
   var GRADS=["linear-gradient(135deg,#12c8ae,#2f7bf6)","linear-gradient(135deg,#7c5cf0,#2f7bf6)","linear-gradient(135deg,#ff9f43,#ff6b6b)","linear-gradient(135deg,#22d3a5,#7c5cf0)"];
 
@@ -218,21 +196,20 @@
   function addDays(iso,k){var p=String(iso).split("-"),d=new Date(+p[0],+p[1]-1,+p[2]+k),m=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");return d.getFullYear()+"-"+m+"-"+dd;}
 
   var DEFAULTS={
-    logo:"",
     donate:"https://online.mrm.or.kr/DhDGO0b?roselect=regular",
     moreLink:"https://www.fondant.kr/",
     days:{
       "2026-09-26":{items:[
-        {emoji:"🎬",label:"퐁당",sub:"복음에 빠지다",title:"갓툰_39편_요셉 두번째 이야기",desc:"",link:"https://fnd.my/4wp",thumb:""},
-        {emoji:"📖",label:"일-일 통독",sub:"CGN과 함께",title:"",desc:"",link:"https://fnd.my/Ntd",thumb:""},
-        {emoji:"🙏",label:"생명의 삶",sub:"영적 회복",title:"",desc:"",link:"https://youtu.be/7xa636ZrKEs?si=WewLV63AwhdN1hNZ",thumb:""}
+        {emoji:"📖",label:"일-일 통독",sub:"CGN과 함께",title:"",desc:"",link:"https://fnd.my/Ntd",thumb:"icon-bible.png"},
+        {emoji:"🙏",label:"생명의 삶",sub:"영적 회복",title:"",desc:"",link:"https://youtu.be/7xa636ZrKEs?si=WewLV63AwhdN1hNZ",thumb:"icon-life.png"},
+        {emoji:"🎬",label:"퐁당",sub:"복음에 빠지다",title:"갓툰_39편_요셉 두번째 이야기",desc:"",link:"https://fnd.my/4wp",thumb:"icon-fondant.png"}
       ]}
     }
   };
   function templateItems(){return [
-    {emoji:"🎬",label:"퐁당",sub:"복음에 빠지다",title:"",desc:"",link:"",thumb:""},
-    {emoji:"📖",label:"일-일 통독",sub:"CGN과 함께",title:"",desc:"",link:"",thumb:""},
-    {emoji:"🙏",label:"생명의 삶",sub:"영적 회복",title:"",desc:"",link:"",thumb:""}
+    {emoji:"📖",label:"일-일 통독",sub:"CGN과 함께",title:"",desc:"",link:"",thumb:"icon-bible.png"},
+    {emoji:"🙏",label:"생명의 삶",sub:"영적 회복",title:"",desc:"",link:"",thumb:"icon-life.png"},
+    {emoji:"🎬",label:"퐁당",sub:"복음에 빠지다",title:"",desc:"",link:"",thumb:"icon-fondant.png"}
   ];}
 
   function $(id){return document.getElementById(id);}
@@ -246,14 +223,13 @@
     var y=+p[0],mo=+p[1],da=+p[2],d=new Date(y,mo-1,da),wd=WD[d.getDay()];
     return{friendly:mo+"월 "+da+"일 "+wd+"요일",compact:String(y).slice(2)+"."+String(mo).padStart(2,"0")+"."+String(da).padStart(2,"0"),wdShort:wd,dd:da};}
 
-  function normalize(o){o=o||{};return {logo:o.logo||"",donate:o.donate||DEFAULTS.donate,moreLink:o.moreLink!=null?o.moreLink:DEFAULTS.moreLink,days:o.days||{}};}
+  function normalize(o){o=o||{};return {donate:o.donate||DEFAULTS.donate,moreLink:o.moreLink!=null?o.moreLink:DEFAULTS.moreLink,days:o.days||{}};}
   function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.days)return normalize(s);}catch(e){}return JSON.parse(JSON.stringify(DEFAULTS));}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){toast("저장 공간이 가득 찼습니다.");}}
 
   var state=load();
   var selectedDate=isoToday();
 
-  /* 오늘(또는 가장 가까운 과거) 콘텐츠 찾기 */
   function resolveDay(dateISO){
     var d=state.days||{};
     if(hasContent(d[dateISO]))return {date:dateISO,day:d[dateISO]};
@@ -265,25 +241,15 @@
   }
 
   /* ---------- 유저 화면 ---------- */
-  function renderLogo(){
-    var box=$("brandLogo"),prev=$("logoPreview"),tag=$("brandTag");
-    if(state.logo){box.innerHTML='<img class="logo-file" src="'+esc(state.logo)+'" alt="퐁당" />';if(tag)tag.style.display="none";if(prev)prev.innerHTML='<img src="'+esc(state.logo)+'" alt="로고" />';return;}
-    if(tag)tag.style.display="";
-    if(prev)prev.innerHTML='<span class="ph">fondant</span>';
-    var img=new Image();img.className="logo-file";img.alt="fondant";
-    img.onload=function(){box.innerHTML="";box.appendChild(img);};
-    img.onerror=function(){box.innerHTML='<span class="fd">f<span class="o"></span>ndant</span>';};
-    img.src="fondant-logo.png";
-  }
   function contentRow(it,i){
     var on=isUrl(it.link),thumb=autoThumb(it),grad=GRADS[i%GRADS.length];
     var l1=esc(it.label+(it.sub?" • "+it.sub:""));
-    var l2=esc(it.title||source(it.link)||"");
+    var l2=esc(it.title||"");
     var img=thumb?'<img src="'+esc(thumb)+'" alt="" onerror="this.remove()" />':'';
     var circle='<div class="circle" style="background:'+grad+'"><span class="em">'+esc(it.emoji||"🎬")+'</span>'+img+'</div>';
     var href=on?esc(it.link):"#",tgt=on?' target="_blank" rel="noopener"':' onclick="return false"';
     return '<a class="row'+(on?'':' off')+'" href="'+href+'"'+tgt+'>'+circle+
-      '<div class="body"><div class="l1">'+l1+'</div><div class="l2">'+(l2||"콘텐츠명")+'</div></div></a>';
+      '<div class="body"><div class="l1">'+l1+'</div>'+(l2?'<div class="l2">'+l2+'</div>':'')+'</div></a>';
   }
   function donateRow(){
     var on=isUrl(state.donate),href=on?esc(state.donate):"#",tgt=on?' target="_blank" rel="noopener"':' onclick="return false"';
@@ -292,8 +258,12 @@
   }
   function renderFeed(items){
     var feed=$("feed");feed.innerHTML="";
-    if(items&&items.length){items.forEach(function(it,i){feed.insertAdjacentHTML("beforeend",contentRow(it,i));});}
-    else{feed.insertAdjacentHTML("beforeend",'<div class="empty">오늘의 콘텐츠가 아직 준비되지 않았습니다.</div>');}
+    if(items&&items.length){
+      items.forEach(function(it,i){
+        if(i>0)feed.insertAdjacentHTML("beforeend",'<div class="sep"></div>');
+        feed.insertAdjacentHTML("beforeend",contentRow(it,i));
+      });
+    }else{feed.insertAdjacentHTML("beforeend",'<div class="empty">오늘의 콘텐츠가 아직 준비되지 않았습니다.</div>');}
     feed.insertAdjacentHTML("beforeend",donateRow());
     if(isUrl(state.moreLink))feed.insertAdjacentHTML("beforeend",'<a class="more" href="'+esc(state.moreLink)+'" target="_blank" rel="noopener">퐁당에서 더 보기 ›</a>');
   }
@@ -301,7 +271,6 @@
     var r=resolveDay(isoToday());
     $("v-date").textContent=r?fmtDate(r.date).friendly:fmtDate(isoToday()).friendly;
     renderFeed(r?r.day.items:null);
-    renderLogo();
   }
 
   /* ---------- 배포 메시지 ---------- */
@@ -332,7 +301,7 @@
         '<input data-f="label" value="'+esc(it.label)+'" placeholder="코너 이름 (예: 퐁당)" /></div></div>'+
       '<div class="field"><input data-f="sub" value="'+esc(it.sub)+'" placeholder="부제 (예: 복음에 빠지다)" /></div>'+
       '<div class="field"><input data-f="title" value="'+esc(it.title)+'" placeholder="(선택) 콘텐츠 제목" /></div>'+
-      '<div class="field"><input data-f="thumb" value="'+esc(it.thumb)+'" placeholder="(선택) 썸네일 주소 — 유튜브는 자동" /></div>'+
+      '<div class="field"><input data-f="thumb" value="'+esc(it.thumb)+'" placeholder="원형 이미지 파일명/주소 (예: icon-bible.png)" /></div>'+
       '<input type="hidden" data-f="desc" value="'+esc(it.desc)+'" />'+
     '</div>';
   }
@@ -355,8 +324,7 @@
     $("weekstrip").innerHTML=html;
   }
   function loadDate(iso){selectedDate=iso;$("f-editdate").value=iso;renderItemsEditor();renderWeekStrip();}
-
-  function fillForm(){$("f-donate").value=state.donate;$("f-more").value=state.moreLink||"";selectedDate=isoToday();$("f-editdate").value=selectedDate;renderItemsEditor();renderWeekStrip();renderLogo();}
+  function fillForm(){$("f-donate").value=state.donate;$("f-more").value=state.moreLink||"";selectedDate=isoToday();$("f-editdate").value=selectedDate;renderItemsEditor();renderWeekStrip();}
 
   var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},1800);}
 
@@ -381,14 +349,6 @@
 
   $("saveBtn").addEventListener("click",function(){syncEditor();save();renderPublic();renderWeekStrip();toast("저장되었습니다 ✓");});
 
-  $("f-logo").addEventListener("change",function(){
-    var file=this.files&&this.files[0];if(!file)return;
-    if(file.size>1024*1024*2){toast("로고는 2MB 이하로 올려주세요");this.value="";return;}
-    var r=new FileReader();r.onload=function(ev){state.logo=ev.target.result;save();renderLogo();renderPublic();toast("로고가 적용되었습니다 ✓");};
-    r.readAsDataURL(file);this.value="";
-  });
-  $("logoReset").addEventListener("click",function(){state.logo="";save();renderLogo();renderPublic();toast("기본 로고로 되돌렸습니다");});
-
   document.querySelectorAll(".tab").forEach(function(tab){
     tab.addEventListener("click",function(){
       document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});
@@ -406,7 +366,7 @@
 
   $("downloadBtn").addEventListener("click",function(){
     syncEditor();save();
-    var text=JSON.stringify({logo:state.logo,donate:state.donate,moreLink:state.moreLink,days:state.days},null,2);
+    var text=JSON.stringify({donate:state.donate,moreLink:state.moreLink,days:state.days},null,2);
     var blob=new Blob([text],{type:"application/json;charset=utf-8"});
     var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="content.json";
     document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);

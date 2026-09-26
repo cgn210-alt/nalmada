@@ -1,13 +1,12 @@
 {
-  "logo": "",
   "donate": "https://online.mrm.or.kr/DhDGO0b?roselect=regular",
   "moreLink": "https://www.fondant.kr/",
   "days": {
     "2026-09-26": {
       "items": [
-        {"emoji": "🎬", "label": "퐁당", "sub": "복음에 빠지다", "title": "갓툰_39편_요셉 두번째 이야기", "desc": "", "link": "https://fnd.my/4wp", "thumb": ""},
-        {"emoji": "📖", "label": "일-일 통독", "sub": "CGN과 함께", "title": "", "desc": "", "link": "https://fnd.my/Ntd", "thumb": ""},
-        {"emoji": "🙏", "label": "생명의 삶", "sub": "영적 회복", "title": "", "desc": "", "link": "https://youtu.be/7xa636ZrKEs?si=WewLV63AwhdN1hNZ", "thumb": ""}
+        {"emoji": "📖", "label": "일-일 통독", "sub": "CGN과 함께", "title": "", "desc": "", "link": "https://fnd.my/Ntd", "thumb": "icon-bible.png"},
+        {"emoji": "🙏", "label": "생명의 삶", "sub": "영적 회복", "title": "", "desc": "", "link": "https://youtu.be/7xa636ZrKEs?si=WewLV63AwhdN1hNZ", "thumb": "icon-life.png"},
+        {"emoji": "🎬", "label": "퐁당", "sub": "복음에 빠지다", "title": "갓툰_39편_요셉 두번째 이야기", "desc": "", "link": "https://fnd.my/4wp", "thumb": "icon-fondant.png"}
       ]
     }
   }
