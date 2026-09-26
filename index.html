@@ -27,17 +27,18 @@
   body{background:var(--bg);color:var(--ink);min-height:100dvh;}
   .app{max-width:430px;margin:0 auto;padding:0 22px 44px;}
 
-  /* 상단: 관리자 버튼만 */
-  .top{display:flex;justify-content:flex-end;padding:16px 0 4px;}
-  .gear{background:var(--soft);border:none;color:var(--ink-2);width:38px;height:38px;border-radius:12px;font-size:17px;cursor:pointer;display:grid;place-items:center;transition:.12s;}
-  .gear:active{transform:scale(.93);}
+  /* 상단 직사각 헤더 박스 */
+  .hero-box{background:linear-gradient(135deg,#eef1ff,#eaf7f3);border:1px solid #e6ebfa;border-radius:20px;
+    padding:26px 20px;text-align:center;margin:20px 0 18px;display:flex;flex-direction:column;gap:10px;}
+  .hero-box .kicker{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.2px;}
+  .hero-box .kicker #v-date{color:var(--ink-2);}
+  .hero-box .title{font-size:24px;font-weight:900;letter-spacing:-.4px;}
+  .hero-box .desc{font-size:13px;color:var(--ink-2);}
 
-  /* 헤더 */
-  .head{padding:8px 4px 16px;}
-  .head .kicker{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.2px;}
-  .head .kicker #v-date{color:var(--ink-2);}
-  .head .title{font-size:23px;font-weight:900;letter-spacing:-.4px;margin-top:7px;}
-  .head .desc{font-size:13px;color:var(--ink-2);margin-top:6px;}
+  /* 하단 관리자 버튼 */
+  .admin-btn{display:block;margin:20px auto 0;background:var(--soft);border:none;color:var(--ink-2);
+    font-family:inherit;font-size:13px;font-weight:700;padding:11px 24px;border-radius:12px;cursor:pointer;transition:.12s;}
+  .admin-btn:active{transform:translateY(1px);}
 
   /* 카드 리스트 */
   .list{display:flex;flex-direction:column;gap:4px;}
@@ -65,7 +66,7 @@
   .empty{background:var(--soft);border-radius:16px;padding:30px 18px;text-align:center;color:var(--ink-2);font-size:14px;}
 
   .footer{text-align:center;color:var(--ink-2);font-size:11px;line-height:1.8;margin-top:30px;letter-spacing:.5px;}
-  .footer b{color:var(--ink);letter-spacing:2px;}
+  .footer b{color:var(--ink);letter-spacing:1px;font-size:12px;}
 
   /* ===== 관리자 ===== */
   .overlay{position:fixed;inset:0;background:rgba(20,20,30,.42);display:none;align-items:flex-end;justify-content:center;z-index:50;}
@@ -124,11 +125,7 @@
 </head>
 <body>
   <div class="app">
-    <div class="top">
-      <button class="gear" id="openAdmin" title="관리자">⚙︎</button>
-    </div>
-
-    <div class="head">
+    <div class="hero-box">
       <div class="kicker">날마다 · 퐁당 &nbsp;<span id="v-date">—</span></div>
       <div class="title">오늘의 추천 콘텐츠</div>
       <div class="desc">매일 골라 담은 오늘의 말씀과 영상</div>
@@ -136,7 +133,8 @@
 
     <div class="list" id="feed"></div>
 
-    <div class="footer"><b>C G N 2 1</b><br />온 세상을 위한 복음의 통로</div>
+    <div class="footer"><b>CGN 21주년</b><br />온 세상을 위한 복음의 통로</div>
+    <button class="admin-btn" id="openAdmin">⚙︎ 관리자</button>
   </div>
 
   <!-- 관리자 -->
