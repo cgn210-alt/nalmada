@@ -392,7 +392,7 @@
   var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},1800);}
 
   /* ---------- 이벤트 ---------- */
-  var ADMIN_HASH="e2eeaa4c";
+  var ADMIN_HASH="803e5f0d";
   function pwHash(s){var v=5381;for(var i=0;i<s.length;i++){v=(v*33+s.charCodeAt(i))>>>0;}return v.toString(16);}
   function openPw(cb){
     var ov=$("pwOverlay"),inp=$("pwInput"),err=$("pwErr");
