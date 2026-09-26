@@ -61,7 +61,7 @@
   .donate-card .cta{color:#f37321;}
   .donate-card .cta .src{color:#f37321;background:#fff3ea;}
 
-  .more{display:block;text-align:center;margin-top:16px;background:var(--soft);color:var(--ink-2);font-weight:700;font-size:13.5px;padding:14px;border-radius:14px;text-decoration:none;}
+  .more{display:block;text-align:center;margin-top:18px;background:var(--grad);color:#fff;font-weight:800;font-size:14.5px;padding:15px;border-radius:14px;text-decoration:none;box-shadow:0 10px 22px rgba(75,91,245,.24);letter-spacing:.2px;}
   .more:active{transform:translateY(1px);}
   .empty{background:var(--soft);border-radius:16px;padding:30px 18px;text-align:center;color:var(--ink-2);font-size:14px;}
 
@@ -190,7 +190,8 @@
         <div class="divider-h"></div>
         <p class="sec">공통 설정 (모든 날짜에 적용)</p>
         <div class="field"><label>후원 링크</label><input type="url" id="f-donate" placeholder="https://online.mrm.or.kr/..." /></div>
-        <div class="field"><label>더보기 버튼 링크</label><input type="url" id="f-more" placeholder="https://www.fondant.kr/" /><div class="hint">맨 아래 '퐁당에서 더 보기' 버튼 주소. 비우면 버튼이 숨겨집니다.</div></div>
+        <div class="field"><label>더보기 버튼 문구</label><input type="text" id="f-moretext" placeholder="퐁당에서 더 보기" /></div>
+        <div class="field"><label>더보기 버튼 링크</label><input type="url" id="f-more" placeholder="https://www.fondant.kr/" /><div class="hint">맨 아래 컬러 버튼입니다. 위 문구가 버튼 글자로, 이 주소가 눌렀을 때 이동할 곳입니다. 링크를 비우면 버튼이 숨겨집니다.</div></div>
 
         <div class="btnrow">
           <button class="btn btn-ghost" id="closeBtn">닫기</button>
@@ -245,6 +246,7 @@
   var DEFAULTS={
     donate:"https://online.mrm.or.kr/DhDGO0b?roselect=regular",
     moreLink:"https://www.fondant.kr/",
+    moreText:"퐁당에서 더 보기",
     days:{
       "2026-09-26":{items:[
         {emoji:"📖",label:"일-일 통독",sub:"CGN과 함께",title:"",desc:"",link:"https://fnd.my/Ntd",thumb:"icon-bible.png"},
@@ -270,7 +272,7 @@
     var y=+p[0],mo=+p[1],da=+p[2],d=new Date(y,mo-1,da),wd=WD[d.getDay()];
     return{friendly:mo+"월 "+da+"일 "+wd+"요일",compact:String(y).slice(2)+"."+String(mo).padStart(2,"0")+"."+String(da).padStart(2,"0"),wdShort:wd,dd:da};}
 
-  function normalize(o){o=o||{};return {donate:o.donate||DEFAULTS.donate,moreLink:o.moreLink!=null?o.moreLink:DEFAULTS.moreLink,days:o.days||{}};}
+  function normalize(o){o=o||{};return {donate:o.donate||DEFAULTS.donate,moreLink:o.moreLink!=null?o.moreLink:DEFAULTS.moreLink,moreText:o.moreText!=null?o.moreText:DEFAULTS.moreText,days:o.days||{}};}
   function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.days)return normalize(s);}catch(e){}return JSON.parse(JSON.stringify(DEFAULTS));}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){toast("저장 공간이 가득 찼습니다.");}}
 
@@ -321,7 +323,7 @@
       });
     }else{feed.insertAdjacentHTML("beforeend",'<div class="empty">오늘의 콘텐츠가 아직 준비되지 않았습니다.</div>');}
     feed.insertAdjacentHTML("beforeend",donateCard());
-    if(isUrl(state.moreLink))feed.insertAdjacentHTML("beforeend",'<a class="more" href="'+esc(state.moreLink)+'" target="_blank" rel="noopener">퐁당에서 더 보기 ›</a>');
+    if(isUrl(state.moreLink))feed.insertAdjacentHTML("beforeend",'<a class="more" href="'+esc(state.moreLink)+'" target="_blank" rel="noopener">'+esc(state.moreText||"퐁당에서 더 보기")+' ›</a>');
   }
   function renderPublic(){
     var r=resolveDay(isoToday());
@@ -369,7 +371,7 @@
       arr.push({emoji:o.emoji||"",label:o.label||"",sub:o.sub||"",title:o.title||"",desc:o.desc||"",link:o.link||"",thumb:o.thumb||""});
     });return arr;
   }
-  function syncEditor(){ state.days[selectedDate]={items:readItems()}; state.donate=$("f-donate").value.trim(); state.moreLink=$("f-more").value.trim(); }
+  function syncEditor(){ state.days[selectedDate]={items:readItems()}; state.donate=$("f-donate").value.trim(); state.moreLink=$("f-more").value.trim(); state.moreText=$("f-moretext").value.trim(); }
 
   function mondayOf(iso){var p=iso.split("-"),dow=new Date(+p[0],+p[1]-1,+p[2]).getDay();return addDays(iso,(dow===0)?-6:(1-dow));}
   function weekMonday(){return mondayOf(isoToday());}
@@ -385,7 +387,7 @@
     $("weekLabel").textContent=labelRange(weekBase,addDays(weekBase,6));
   }
   function loadDate(iso){selectedDate=iso;weekBase=mondayOf(iso);$("f-editdate").value=iso;renderItemsEditor();renderWeekStrip();}
-  function fillForm(){$("f-donate").value=state.donate;$("f-more").value=state.moreLink||"";selectedDate=isoToday();weekBase=mondayOf(selectedDate);$("f-editdate").value=selectedDate;renderItemsEditor();renderWeekStrip();}
+  function fillForm(){$("f-donate").value=state.donate;$("f-more").value=state.moreLink||"";$("f-moretext").value=state.moreText||"";selectedDate=isoToday();weekBase=mondayOf(selectedDate);$("f-editdate").value=selectedDate;renderItemsEditor();renderWeekStrip();}
 
   var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},1800);}
 
@@ -456,7 +458,7 @@
 
   $("downloadBtn").addEventListener("click",function(){
     syncEditor();save();
-    var text=JSON.stringify({donate:state.donate,moreLink:state.moreLink,days:state.days},null,2);
+    var text=JSON.stringify({donate:state.donate,moreLink:state.moreLink,moreText:state.moreText,days:state.days},null,2);
     var blob=new Blob([text],{type:"application/json;charset=utf-8"});
     var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="content.json";
     document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
