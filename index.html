@@ -121,6 +121,23 @@
 
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-size:14px;font-weight:700;transition:.22s;z-index:80;pointer-events:none;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* 비밀번호 입력창 */
+  .pw-overlay{position:fixed;inset:0;background:rgba(20,20,30,.5);display:none;align-items:center;justify-content:center;z-index:60;padding:24px;}
+  .pw-overlay.show{display:flex;}
+  .pw-box{width:100%;max-width:320px;background:#fff;border-radius:22px;padding:26px 22px 20px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.28);animation:pop .2s ease;}
+  @keyframes pop{from{transform:scale(.94);opacity:.5}to{transform:none;opacity:1}}
+  .pw-ico{width:56px;height:56px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;font-size:25px;margin:0 auto 14px;}
+  .pw-title{font-size:18px;font-weight:900;color:var(--ink);}
+  .pw-desc{font-size:13px;color:var(--ink-2);margin-top:6px;}
+  .pw-input{width:100%;margin-top:16px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;font-family:inherit;text-align:center;letter-spacing:1px;}
+  .pw-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(75,91,245,.14);}
+  .pw-err{font-size:12.5px;color:#f05252;font-weight:700;margin-top:10px;min-height:15px;}
+  .pw-btns{display:flex;gap:10px;margin-top:6px;}
+  .pw-btns button{flex:1;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:.12s;}
+  .pw-btns button:active{transform:translateY(1px);}
+  .pw-cancel{background:var(--soft);color:var(--ink);}
+  .pw-ok{background:var(--accent);color:#fff;}
 </style>
 </head>
 <body>
@@ -184,6 +201,21 @@
           <button class="dl" id="downloadBtn">⬇️ 배포 파일 내려받기 (content.json)</button>
           <div class="hint" style="margin-top:10px">1) 이 파일을 배포 폴더에 넣기 → 2) 사이트-올리기.bat 실행 → 3) 끝. 다음 주엔 다시 이 파일만 교체하면 됩니다.</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 비밀번호 -->
+  <div class="pw-overlay" id="pwOverlay">
+    <div class="pw-box">
+      <div class="pw-ico">🔒</div>
+      <div class="pw-title">관리자 확인</div>
+      <div class="pw-desc">비밀번호를 입력하세요</div>
+      <input type="password" id="pwInput" class="pw-input" placeholder="비밀번호" autocomplete="current-password" />
+      <div class="pw-err" id="pwErr"></div>
+      <div class="pw-btns">
+        <button class="pw-cancel" id="pwCancel">취소</button>
+        <button class="pw-ok" id="pwOk">확인</button>
       </div>
     </div>
   </div>
@@ -344,12 +376,30 @@
   /* ---------- 이벤트 ---------- */
   var ADMIN_HASH="e2eeaa4c";
   function pwHash(s){var v=5381;for(var i=0;i<s.length;i++){v=(v*33+s.charCodeAt(i))>>>0;}return v.toString(16);}
+  function openPw(cb){
+    var ov=$("pwOverlay"),inp=$("pwInput"),err=$("pwErr");
+    err.textContent="";inp.value="";ov.classList.add("show");
+    setTimeout(function(){inp.focus();},60);
+    function submit(){
+      if(pwHash(inp.value)===ADMIN_HASH){try{sessionStorage.setItem("cgn_admin_ok","1");}catch(e){}done();cb();}
+      else{err.textContent="비밀번호가 올바르지 않습니다";inp.value="";inp.focus();}
+    }
+    function done(){ov.classList.remove("show");
+      $("pwOk").removeEventListener("click",submit);
+      $("pwCancel").removeEventListener("click",done);
+      inp.removeEventListener("keydown",onKey);
+      ov.removeEventListener("click",onOv);
+    }
+    function onKey(e){if(e.key==="Enter")submit();else if(e.key==="Escape")done();}
+    function onOv(e){if(e.target===ov)done();}
+    $("pwOk").addEventListener("click",submit);
+    $("pwCancel").addEventListener("click",done);
+    inp.addEventListener("keydown",onKey);
+    ov.addEventListener("click",onOv);
+  }
   function requireAdmin(cb){
     if(sessionStorage.getItem("cgn_admin_ok")==="1"){cb();return;}
-    var pw=prompt("관리자 비밀번호를 입력하세요");
-    if(pw===null)return;
-    if(pwHash(pw)===ADMIN_HASH){try{sessionStorage.setItem("cgn_admin_ok","1");}catch(e){}cb();}
-    else alert("비밀번호가 올바르지 않습니다.");
+    openPw(cb);
   }
   $("openAdmin").addEventListener("click",function(){requireAdmin(function(){fillForm();$("overlay").classList.add("show");});});
   $("closeBtn").addEventListener("click",close);
