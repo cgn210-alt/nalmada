@@ -39,26 +39,26 @@
   .head .title{font-size:23px;font-weight:900;letter-spacing:-.4px;margin-top:7px;}
   .head .desc{font-size:13px;color:var(--ink-2);margin-top:6px;}
 
-  /* 리치 카드 리스트 */
-  .list{display:flex;flex-direction:column;gap:2px;}
-  .card{display:flex;gap:14px;align-items:center;padding:12px 8px;border-radius:18px;text-decoration:none;color:inherit;transition:.12s;}
+  /* 카드 리스트 */
+  .list{display:flex;flex-direction:column;gap:4px;}
+  .card{display:flex;gap:18px;align-items:center;padding:15px 10px;border-radius:18px;text-decoration:none;color:inherit;transition:.12s;}
   .card:active{background:var(--soft);} .card.off{opacity:.55;}
-  .card .thumb{width:104px;height:104px;border-radius:16px;flex:0 0 auto;position:relative;overflow:hidden;background:var(--soft-2);display:grid;place-items:center;color:#fff;}
+  .card .thumb{width:80px;height:80px;border-radius:50%;flex:0 0 auto;position:relative;overflow:hidden;background:var(--soft-2);display:grid;place-items:center;color:#fff;box-shadow:0 4px 12px rgba(25,24,51,.12);}
   .card .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-  .card .thumb .em{font-size:34px;line-height:1;}
-  .card .thumb .tag{position:absolute;left:7px;bottom:7px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:800;padding:5px 9px;border-radius:8px;max-width:calc(100% - 14px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .card .thumb .em{font-size:32px;line-height:1;}
   .card .body{flex:1;min-width:0;}
-  .card .title{font-size:17px;font-weight:800;line-height:1.3;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all;}
-  .card .m1{font-size:13px;color:var(--ink-2);margin-top:6px;line-height:1.35;}
-  .card .m2{display:flex;align-items:center;gap:7px;margin-top:8px;}
-  .card .src{font-weight:800;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:7px;font-size:11.5px;}
-  .card .go{font-size:12.5px;font-weight:700;color:var(--ink-2);}
-  .sep{height:1px;background:var(--line);margin:0 8px;}
+  .card .title{font-size:16.5px;font-weight:800;line-height:1.32;color:var(--ink);word-break:keep-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .card .sub{font-size:13.5px;color:var(--ink-2);margin-top:6px;line-height:1.4;word-break:keep-all;}
+  .card .cta{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:12.5px;font-weight:800;color:var(--accent);}
+  .card .cta .src{color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:7px;font-size:11px;}
+  .card.off .cta{color:var(--ink-2);}
+  .sep{height:1px;background:var(--line);margin:0 10px;}
 
   /* 후원 카드 */
-  .donate-card{margin-top:12px;padding-top:16px;border-top:1px solid var(--line);}
+  .donate-card{margin-top:14px;padding-top:18px;border-top:1px solid var(--line);}
   .donate-card .thumb{background:linear-gradient(135deg,#ff9d3c,#f37321);}
-  .donate-card .src{color:#f37321;background:#fff3ea;}
+  .donate-card .cta{color:#f37321;}
+  .donate-card .cta .src{color:#f37321;background:#fff3ea;}
 
   .more{display:block;text-align:center;margin-top:16px;background:var(--soft);color:var(--ink-2);font-weight:700;font-size:13.5px;padding:14px;border-radius:14px;text-decoration:none;}
   .more:active{transform:translateY(1px);}
@@ -251,16 +251,15 @@
   function contentCard(it,i){
     var on=isUrl(it.link),thumb=autoThumb(it),grad=GRADS[i%GRADS.length];
     var big=esc(it.title||it.label||"콘텐츠");
-    var m1=it.title?(it.label+(it.sub?" • "+it.sub:"")):(it.sub||"");
+    var sub=it.title?(it.label+(it.sub?" • "+it.sub:"")):(it.sub||"");
     var src=source(it.link);
     var img=thumb?'<img src="'+esc(thumb)+'" alt="" onerror="this.remove()" />':'';
-    var tag='<span class="tag">'+esc((it.emoji?it.emoji+" ":"")+it.label)+'</span>';
     var href=on?esc(it.link):"#",tgt=on?' target="_blank" rel="noopener"':' onclick="return false"';
     return '<a class="card'+(on?'':' off')+'" href="'+href+'"'+tgt+'>'+
-      '<div class="thumb" style="background:'+grad+'"><span class="em">'+esc(it.emoji||"🎬")+'</span>'+img+tag+'</div>'+
+      '<div class="thumb" style="background:'+grad+'"><span class="em">'+esc(it.emoji||"🎬")+'</span>'+img+'</div>'+
       '<div class="body"><div class="title">'+big+'</div>'+
-        (m1?'<div class="m1">'+esc(m1)+'</div>':'')+
-        '<div class="m2">'+(src?'<span class="src">'+esc(src)+'</span>':'')+'<span class="go">'+(on?'지금 시청 ›':'준비 중')+'</span></div>'+
+        (sub?'<div class="sub">'+esc(sub)+'</div>':'')+
+        '<div class="cta">'+(src?'<span class="src">'+esc(src)+'</span>':'')+'<span>'+(on?'지금 시청 ›':'준비 중')+'</span></div>'+
       '</div></a>';
   }
   function donateCard(){
@@ -268,8 +267,8 @@
     return '<a class="card donate-card" href="'+href+'"'+tgt+'>'+
       '<div class="thumb"><span class="em">💛</span></div>'+
       '<div class="body"><div class="title">함께! 미디어 선교</div>'+
-        '<div class="m1">여러분의 후원이 복음의 통로가 됩니다</div>'+
-        '<div class="m2"><span class="src">후원</span><span class="go">후원하기 ›</span></div>'+
+        '<div class="sub">여러분의 후원이 복음의 통로가 됩니다</div>'+
+        '<div class="cta"><span class="src">후원</span><span>후원하기 ›</span></div>'+
       '</div></a>';
   }
   function renderFeed(items){
