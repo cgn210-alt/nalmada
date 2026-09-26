@@ -96,6 +96,7 @@
   .wchip .dd{font-size:15px;font-weight:800;color:var(--ink);}
   .wchip .dot{width:6px;height:6px;border-radius:50%;background:#dcdde4;}
   .wchip .dot.on{background:var(--accent);}
+  .wchip.today .wd{color:var(--accent);font-weight:800;}
 
   .item{background:var(--soft);border-radius:15px;padding:13px;margin-bottom:11px;}
   .item .ih{display:flex;align-items:center;gap:7px;margin-bottom:11px;}
@@ -360,11 +361,15 @@
   }
   function syncEditor(){ state.days[selectedDate]={items:readItems()}; state.donate=$("f-donate").value.trim(); state.moreLink=$("f-more").value.trim(); }
 
+  function weekMonday(){
+    var t=isoToday(),p=t.split("-"),dow=new Date(+p[0],+p[1]-1,+p[2]).getDay();
+    return addDays(t,(dow===0)?-6:(1-dow));
+  }
   function renderWeekStrip(){
-    var base=isoToday(),html="";
+    var base=weekMonday(),today=isoToday(),html="";
     for(var k=0;k<7;k++){
-      var iso=addDays(base,k),f=fmtDate(iso),on=hasContent(state.days[iso]),sel=(iso===selectedDate);
-      html+='<button type="button" class="wchip'+(sel?' sel':'')+'" data-d="'+iso+'"><span class="wd">'+f.wdShort+'</span><span class="dd">'+f.dd+'</span><span class="dot'+(on?' on':'')+'"></span></button>';
+      var iso=addDays(base,k),f=fmtDate(iso),on=hasContent(state.days[iso]),sel=(iso===selectedDate),td=(iso===today);
+      html+='<button type="button" class="wchip'+(sel?' sel':'')+(td?' today':'')+'" data-d="'+iso+'"><span class="wd">'+f.wdShort+'</span><span class="dd">'+f.dd+'</span><span class="dot'+(on?' on':'')+'"></span></button>';
     }
     $("weekstrip").innerHTML=html;
   }
