@@ -342,7 +342,16 @@
   var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},1800);}
 
   /* ---------- 이벤트 ---------- */
-  $("openAdmin").addEventListener("click",function(){fillForm();$("overlay").classList.add("show");});
+  var ADMIN_HASH="e2eeaa4c";
+  function pwHash(s){var v=5381;for(var i=0;i<s.length;i++){v=(v*33+s.charCodeAt(i))>>>0;}return v.toString(16);}
+  function requireAdmin(cb){
+    if(sessionStorage.getItem("cgn_admin_ok")==="1"){cb();return;}
+    var pw=prompt("관리자 비밀번호를 입력하세요");
+    if(pw===null)return;
+    if(pwHash(pw)===ADMIN_HASH){try{sessionStorage.setItem("cgn_admin_ok","1");}catch(e){}cb();}
+    else alert("비밀번호가 올바르지 않습니다.");
+  }
+  $("openAdmin").addEventListener("click",function(){requireAdmin(function(){fillForm();$("overlay").classList.add("show");});});
   $("closeBtn").addEventListener("click",close);
   $("overlay").addEventListener("click",function(e){if(e.target===this)close();});
   function close(){$("overlay").classList.remove("show");}
