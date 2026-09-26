@@ -208,10 +208,10 @@
       </div>
 
       <div class="pane" id="pane-deploy">
-        <p class="sub">일주일치를 다 채웠으면 아래 파일을 내려받아 GitHub에 올리면, 유저들이 매일 자동으로 그날 콘텐츠를 봅니다.</p>
+        <p class="sub"><b>이제 '저장'하면 모든 기기·유저에게 즉시 자동 반영</b>됩니다. 따로 파일을 올릴 필요가 없습니다. 아래는 만일을 대비한 백업 내려받기입니다.</p>
         <div class="deploy-box">
-          <button class="dl" id="downloadBtn">⬇️ 배포 파일 내려받기 (content.json)</button>
-          <div class="hint" style="margin-top:10px">1) 이 파일을 배포 폴더에 넣기 → 2) 사이트-올리기.bat 실행 → 3) 끝. 다음 주엔 다시 이 파일만 교체하면 됩니다.</div>
+          <button class="dl" id="downloadBtn">⬇️ 백업 파일 내려받기 (content.json)</button>
+          <div class="hint" style="margin-top:10px">평소엔 사용하지 않아도 됩니다. Firebase 연결이 안 될 때를 대비한 백업용입니다.</div>
         </div>
       </div>
     </div>
@@ -234,6 +234,8 @@
 
   <div class="toast" id="toast">저장되었습니다</div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 (function(){
   "use strict";
@@ -275,11 +277,14 @@
 
   function normalize(o){o=o||{};return {donate:o.donate||DEFAULTS.donate,moreLink:o.moreLink!=null?o.moreLink:DEFAULTS.moreLink,moreText:o.moreText!=null?o.moreText:DEFAULTS.moreText,days:o.days||{}};}
   function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.days)return normalize(s);}catch(e){}return JSON.parse(JSON.stringify(DEFAULTS));}
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){toast("저장 공간이 가득 찼습니다.");}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    if(dbRef){try{dbRef.set(state);}catch(e){}}
+  }
 
   var state=load();
   var selectedDate=isoToday();
   var weekBase=null;
+  var dbRef=null,adminOpen=false;
 
   function resolveDay(dateISO){
     var d=state.days||{};
@@ -420,10 +425,10 @@
     if(sessionStorage.getItem("cgn_admin_ok")==="1"){cb();return;}
     openPw(cb);
   }
-  $("openAdmin").addEventListener("click",function(){requireAdmin(function(){fillForm();$("overlay").classList.add("show");});});
+  $("openAdmin").addEventListener("click",function(){requireAdmin(function(){adminOpen=true;fillForm();$("overlay").classList.add("show");});});
   $("closeBtn").addEventListener("click",close);
   $("overlay").addEventListener("click",function(e){if(e.target===this)close();});
-  function close(){$("overlay").classList.remove("show");}
+  function close(){adminOpen=false;$("overlay").classList.remove("show");renderPublic();}
 
   $("f-editdate").addEventListener("change",function(){syncEditor();save();loadDate(this.value||isoToday());});
   $("weekstrip").addEventListener("click",function(e){var b=e.target.closest(".wchip");if(!b)return;syncEditor();save();loadDate(b.getAttribute("data-d"));});
@@ -466,14 +471,31 @@
     toast("content.json 내려받기 완료");
   });
 
-  /* ---------- 시작 ---------- */
-  var hasLocal=false;try{hasLocal=!!localStorage.getItem(KEY);}catch(e){}
+  /* ---------- 시작 (Firebase 실시간 동기화) ---------- */
+  var FB_CONFIG={apiKey:"AIzaSyCoStBz_34c5ZvplNSm8rarnd7zVLUiexk",authDomain:"cgn-love.firebaseapp.com",databaseURL:"https://cgn-love-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"cgn-love",storageBucket:"cgn-love.firebasestorage.app",messagingSenderId:"164467571776",appId:"1:164467571776:web:6c3df66c56f907e808b3a5"};
+  var FB_PATH="nalmadaData";
   renderPublic();
-  if(!hasLocal){
-    fetch("content.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(j){
-      if(j&&j.days){state=normalize(j);renderPublic();}
-    }).catch(function(){});
+  function fallbackJson(){
+    var hasLocal=false;try{hasLocal=!!localStorage.getItem(KEY);}catch(e){}
+    if(!hasLocal){fetch("content.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.days){state=normalize(j);renderPublic();}}).catch(function(){});}
   }
+  function seedRemote(){
+    fetch("content.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+      var seed=(j&&j.days)?normalize(j):state;if(dbRef){try{dbRef.set(seed);}catch(e){}}
+    }).catch(function(){if(dbRef){try{dbRef.set(state);}catch(e){}}});
+  }
+  (function initFB(){
+    if(typeof firebase==="undefined"){fallbackJson();return;}
+    try{
+      firebase.initializeApp(FB_CONFIG);
+      dbRef=firebase.database().ref(FB_PATH);
+      dbRef.on("value",function(snap){
+        var v=snap.val();
+        if(v&&v.days){ if(!adminOpen){state=normalize(v);renderPublic();} }
+        else { seedRemote(); }
+      },function(){ fallbackJson(); });
+    }catch(e){ fallbackJson(); }
+  })();
 })();
 </script>
 </body>
