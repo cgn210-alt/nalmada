@@ -76,6 +76,9 @@
   .grip{width:42px;height:5px;border-radius:99px;background:#e3e4e9;margin:0 auto 14px;}
   .sheet h3{margin:0 0 3px;font-size:18px;font-weight:900;}
   .sheet .sub{color:var(--ink-2);font-size:12.5px;margin:0 0 15px;line-height:1.5;}
+  .syncst{font-size:12px;font-weight:700;padding:9px 12px;border-radius:10px;margin:0 0 15px;text-align:center;background:var(--soft);color:var(--ink-2);}
+  .syncst.on{background:#e8f7ef;color:#159a5c;}
+  .syncst.off{background:#fdeaea;color:#d64545;}
   .tabs{display:flex;gap:6px;background:var(--soft);border-radius:12px;padding:4px;margin-bottom:16px;}
   .tab{flex:1;text-align:center;padding:10px;border-radius:9px;font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;}
   .tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08);}
@@ -166,6 +169,7 @@
       <div class="grip"></div>
       <h3>콘텐츠 관리 · 일주일 미리 준비</h3>
       <p class="sub">날짜를 골라 그날 콘텐츠를 미리 채워 두면, 매일 자동으로 그날 내용이 유저에게 보입니다.</p>
+      <div class="syncst" id="syncSt">동기화 상태 확인 중…</div>
 
       <div class="tabs">
         <div class="tab active" data-tab="edit">편집</div>
@@ -475,7 +479,9 @@
   var FB_CONFIG={apiKey:"AIzaSyCoStBz_34c5ZvplNSm8rarnd7zVLUiexk",authDomain:"cgn-love.firebaseapp.com",databaseURL:"https://cgn-love-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"cgn-love",storageBucket:"cgn-love.firebasestorage.app",messagingSenderId:"164467571776",appId:"1:164467571776:web:6c3df66c56f907e808b3a5"};
   var FB_PATH="nalmadaData";
   renderPublic();
+  function setSync(ok){var el=$("syncSt");if(!el)return;el.className="syncst "+(ok?"on":"off");el.textContent=ok?"🟢 실시간 동기화 켜짐 — 저장하면 모든 기기에 즉시 반영":"⚪ 오프라인 — 저장이 이 기기에만 남습니다";}
   function fallbackJson(){
+    setSync(false);
     var hasLocal=false;try{hasLocal=!!localStorage.getItem(KEY);}catch(e){}
     if(!hasLocal){fetch("content.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.days){state=normalize(j);renderPublic();}}).catch(function(){});}
   }
@@ -489,6 +495,7 @@
     try{
       firebase.initializeApp(FB_CONFIG);
       dbRef=firebase.database().ref(FB_PATH);
+      firebase.database().ref(".info/connected").on("value",function(s){setSync(s.val()===true);});
       dbRef.on("value",function(snap){
         var v=snap.val();
         if(v&&v.days){ if(!adminOpen){state=normalize(v);renderPublic();} }
