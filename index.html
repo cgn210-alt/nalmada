@@ -363,9 +363,9 @@
         '<button type="button" class="ib" data-act="up"'+(i===0?' disabled style="opacity:.3"':'')+'>↑</button>'+
         '<button type="button" class="ib" data-act="down"'+(i===total-1?' disabled style="opacity:.3"':'')+'>↓</button>'+
         '<button type="button" class="ib del" data-act="del">✕</button></div>'+
-      '<div class="field"><div class="g">'+
-        '<input class="em" data-f="emoji" value="'+esc(it.emoji)+'"'+(it.label?' readonly':'')+' placeholder="📖" />'+
-        '<input data-f="label" value="'+esc(it.label)+'"'+(it.label?' readonly':'')+' placeholder="코너 이름 (예: 퐁당영화)" /></div></div>'+
+      '<div class="field"><label style="font-size:11px;color:var(--ink-2);font-weight:700;display:block;margin-bottom:5px">상단 제목</label><div class="g">'+
+        '<input class="em" data-f="emoji" value="'+esc(it.emoji)+'" placeholder="📖" />'+
+        '<input data-f="label" value="'+esc(it.label)+'" placeholder="상단 제목 (예: 퐁당영화)" /></div></div>'+
       '<div class="field"><input data-f="link" value="'+esc(it.link)+'" placeholder="콘텐츠 링크 (https://...)" /></div>'+
       '<div class="field"><input data-f="title" value="'+esc(it.title)+'" placeholder="(선택) 오늘 콘텐츠 제목" /></div>'+
       '<div class="field"><input data-f="sub" value="'+esc(it.sub)+'" placeholder="부제 (예: 복음에 빠지다)" /></div>'+
