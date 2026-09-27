@@ -192,11 +192,12 @@
         <div id="itemsWrap"></div>
         <button type="button" class="add" id="addItem">＋ 콘텐츠 추가</button>
 
+        <div class="field" style="margin-top:14px"><label>더보기 버튼 문구 (이 날짜)</label><input type="text" id="f-moretext" placeholder="퐁당에서 더 보기" /></div>
+        <div class="field"><label>더보기 버튼 링크 (이 날짜)</label><input type="url" id="f-more" placeholder="https://www.fondant.kr/" /><div class="hint">맨 아래 컬러 버튼입니다. 이 날짜에만 적용됩니다. 링크를 비우면 그날은 버튼이 숨겨집니다.</div></div>
+
         <div class="divider-h"></div>
-        <p class="sec">공통 설정 (모든 날짜에 적용)</p>
+        <p class="sec">공통 설정 (모든 날짜 공통)</p>
         <div class="field"><label>후원 링크</label><input type="url" id="f-donate" placeholder="https://online.mrm.or.kr/..." /></div>
-        <div class="field"><label>더보기 버튼 문구</label><input type="text" id="f-moretext" placeholder="퐁당에서 더 보기" /></div>
-        <div class="field"><label>더보기 버튼 링크</label><input type="url" id="f-more" placeholder="https://www.fondant.kr/" /><div class="hint">맨 아래 컬러 버튼입니다. 위 문구가 버튼 글자로, 이 주소가 눌렀을 때 이동할 곳입니다. 링크를 비우면 버튼이 숨겨집니다.</div></div>
 
         <div class="btnrow">
           <button class="btn btn-ghost" id="closeBtn">닫기</button>
@@ -324,8 +325,9 @@
         '<div class="cta"><span class="src">후원</span><span>후원하기 ›</span></div>'+
       '</div></a>';
   }
-  function renderFeed(items){
+  function renderFeed(day){
     var feed=$("feed");feed.innerHTML="";
+    var items=day&&day.items;
     if(items&&items.length){
       items.forEach(function(it,i){
         if(i>0)feed.insertAdjacentHTML("beforeend",'<div class="sep"></div>');
@@ -333,12 +335,14 @@
       });
     }else{feed.insertAdjacentHTML("beforeend",'<div class="empty">오늘의 콘텐츠가 아직 준비되지 않았습니다.</div>');}
     feed.insertAdjacentHTML("beforeend",donateCard());
-    if(isUrl(state.moreLink))feed.insertAdjacentHTML("beforeend",'<a class="more" href="'+esc(state.moreLink)+'" target="_blank" rel="noopener">'+esc(state.moreText||"퐁당에서 더 보기")+' ›</a>');
+    var mLink=(day&&day.moreLink!=null)?day.moreLink:(state.moreLink||"");
+    var mText=(day&&day.moreText)?day.moreText:(state.moreText||"퐁당에서 더 보기");
+    if(isUrl(mLink))feed.insertAdjacentHTML("beforeend",'<a class="more" href="'+esc(mLink)+'" target="_blank" rel="noopener">'+esc(mText||"퐁당에서 더 보기")+' ›</a>');
   }
   function renderPublic(){
     var r=resolveDay(isoToday());
     $("v-date").textContent=r?fmtDate(r.date).friendly:fmtDate(isoToday()).friendly;
-    renderFeed(r?r.day.items:null);
+    renderFeed(r?r.day:null);
   }
 
   /* ---------- 배포 메시지 ---------- */
@@ -381,7 +385,12 @@
       arr.push({emoji:o.emoji||"",label:o.label||"",sub:o.sub||"",title:o.title||"",desc:o.desc||"",link:o.link||"",thumb:o.thumb||""});
     });return arr;
   }
-  function syncEditor(){ state.days[selectedDate]={items:readItems()}; state.donate=$("f-donate").value.trim(); state.moreLink=$("f-more").value.trim(); state.moreText=$("f-moretext").value.trim(); }
+  function syncEditor(){ state.days[selectedDate]={items:readItems(),moreText:$("f-moretext").value.trim(),moreLink:$("f-more").value.trim()}; state.donate=$("f-donate").value.trim(); }
+  function fillDayExtras(){
+    var d=state.days[selectedDate]||{};
+    $("f-moretext").value=(d.moreText!=null?d.moreText:(state.moreText!=null?state.moreText:"퐁당에서 더 보기"));
+    $("f-more").value=(d.moreLink!=null?d.moreLink:(state.moreLink!=null?state.moreLink:""));
+  }
 
   function mondayOf(iso){var p=iso.split("-"),dow=new Date(+p[0],+p[1]-1,+p[2]).getDay();return addDays(iso,(dow===0)?-6:(1-dow));}
   function weekMonday(){return mondayOf(isoToday());}
@@ -396,8 +405,8 @@
     $("weekstrip").innerHTML=html;
     $("weekLabel").textContent=labelRange(weekBase,addDays(weekBase,6));
   }
-  function loadDate(iso){selectedDate=iso;weekBase=mondayOf(iso);$("f-editdate").value=iso;renderItemsEditor();renderWeekStrip();}
-  function fillForm(){$("f-donate").value=state.donate;$("f-more").value=state.moreLink||"";$("f-moretext").value=state.moreText||"";selectedDate=isoToday();weekBase=mondayOf(selectedDate);$("f-editdate").value=selectedDate;renderItemsEditor();renderWeekStrip();}
+  function loadDate(iso){selectedDate=iso;weekBase=mondayOf(iso);$("f-editdate").value=iso;renderItemsEditor();fillDayExtras();renderWeekStrip();}
+  function fillForm(){$("f-donate").value=state.donate;selectedDate=isoToday();weekBase=mondayOf(selectedDate);$("f-editdate").value=selectedDate;renderItemsEditor();fillDayExtras();renderWeekStrip();}
 
   var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},1800);}
 
